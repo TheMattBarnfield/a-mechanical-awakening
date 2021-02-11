@@ -1,5 +1,13 @@
 <script>
 	import Header from './Header.svelte'
+	import Home from './Home.svelte'
+	import { Router, Route, navigate } from "svelte-routing";
+
+	const path = localStorage.getItem('path');
+	if (path) {
+		localStorage.removeItem('path');
+		navigate(path);
+	}
 </script>
 
 <style type="text/scss" global>
@@ -9,6 +17,14 @@
 		background-color: $light-background;
 		color: $dark-text;
 		padding: 0;
+	}
+
+	:global(a) {
+		text-decoration: none;
+
+		&:hover {
+			text-decoration: none;
+		}
 	}
 
 	main {
@@ -23,12 +39,12 @@
 	}
 </style>
 
-<Header />
-<main>
-	<h1>A Mechanical Awakening</h1>
-	<p>
-		Welcome to the official site of <em>A Mechanical Awakening</em>!
-		Here you'll be able to find all sorts of resources about your adventures in Eberron!
-	</p>
-</main>
+<Router>
+	<Header />
+	<main>
+		<Route path="/"><Home /></Route>
+		<Route path="other">other</Route>
+	</main>
+</Router>
+
 

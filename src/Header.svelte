@@ -1,23 +1,30 @@
+<script>
+    import { link } from "svelte-routing";
+</script>
+
+
 <style type="text/scss">
     @import 'colors.scss';
 
     header {
-      background-color: $dark-background;
-      color: $light-text;
-      padding: 20px;
+        background-color: $dark-background;
+        color: $light-text;
+        padding: 20px;
 
-      a {
-        text-decoration: none;
-        color: inherit;
+      a.home-link {
+        font-size: 2em;
+        font-weight: 100;
+        color: $light-text;
 
-        &.home-link {
-          font-size: 2em;
-          font-weight: 100;
+        &:hover {
+          color: $light-blue
         }
       }
     }
 </style>
 
 <header>
-    <a class="home-link" href="/">A Mechanical Awakening</a>
+    <nav>
+        <a class="home-link" href="/" use:link>A Mechanical Awakening</a>
+    </nav>
 </header>
