@@ -1,11 +1,11 @@
 <script>
     import { link } from "svelte-routing";
-    import {basepath} from "./routing";
+    import {basepath} from "../routing";
 </script>
 
 
 <style type="text/scss">
-    @import 'colors.scss';
+    @import 'src/colors';
 
     header {
         background-color: $dark-background;

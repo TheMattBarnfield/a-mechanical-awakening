@@ -1,15 +1,15 @@
 <script lang="ts">
-    import {getNpc} from "./api";
+    import {getNpc} from "../api";
     import LoadingSpinner from "./LoadingSpinner.svelte";
-    import type Npc from './models/npc';
+    import type Npc from '../models/npc';
 
     export let id: string;
     let npc: Promise<Npc> = getNpc(id);
 </script>
 
 <style lang="scss">
-    @import './colors.scss';
-    @import './breakpoints.scss';
+    @import 'src/colors';
+    @import 'src/breakpoints';
 
     .container {
       display: grid;

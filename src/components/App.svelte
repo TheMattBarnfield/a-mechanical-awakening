@@ -3,7 +3,7 @@
 	import Home from './Home.svelte';
 	import Npc from './Npc.svelte';
 	import { Router, Route, navigate } from "svelte-routing";
-	import {basepath} from "./routing";
+	import {basepath} from "../routing";
 
 	const path = localStorage.getItem('path');
 	if (path) {
@@ -13,8 +13,8 @@
 </script>
 
 <style type="text/scss" global>
-	@import './colors.scss';
-	@import './breakpoints.scss';
+	@import 'src/colors';
+	@import 'src/breakpoints';
 
 	:global(body) {
 		background-color: $light-background;
