@@ -2,7 +2,7 @@
 	import Header from './Header.svelte'
 	import Home from './Home.svelte'
 	import { Router, Route, navigate } from "svelte-routing";
-	import {getBasepath} from "./routing";
+	import {basepath} from "./routing";
 
 	const path = localStorage.getItem('path');
 	if (path) {
@@ -40,7 +40,7 @@
 	}
 </style>
 
-<Router basepath={getBasepath()}>
+<Router basepath={basepath}>
 	<Header />
 	<main>
 		<Route path="/"><Home /></Route>

@@ -1,6 +1,6 @@
 <script>
     import { link } from "svelte-routing";
-    import {getBasepath} from "./routing";
+    import {basepath} from "./routing";
 </script>
 
 
@@ -26,6 +26,6 @@
 
 <header>
     <nav>
-        <a class="home-link" href={getBasepath()} use:link>A Mechanical Awakening</a>
+        <a class="home-link" href={basepath} use:link>A Mechanical Awakening</a>
     </nav>
 </header>
