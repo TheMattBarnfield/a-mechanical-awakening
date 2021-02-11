@@ -3,6 +3,10 @@
 	import Home from './Home.svelte'
 	import { Router, Route, navigate } from "svelte-routing";
 
+	const basepath = location.hostname === 'localhost'
+		? '/'
+		: '/a-mechanical-awakening';
+
 	const path = localStorage.getItem('path');
 	if (path) {
 		localStorage.removeItem('path');
@@ -39,7 +43,7 @@
 	}
 </style>
 
-<Router>
+<Router basepath={basepath}>
 	<Header />
 	<main>
 		<Route path="/"><Home /></Route>
