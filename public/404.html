@@ -5,9 +5,11 @@
     <title>Title</title>
 
     <script>
-        const path = window.location.pathname.slice(1);
+        // coupled with routing.ts
+        const basepath = 'a-mechanical-awakening';
+        const path = window.location.pathname.replace('/' + basepath + '/', '');
         localStorage.setItem('path', path);
-        window.location.href='../';
+        window.location.href='../' + basepath;
     </script>
 </head>
 <body>
