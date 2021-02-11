@@ -1,6 +1,7 @@
 <script lang="ts">
-	import Header from './Header.svelte'
-	import Home from './Home.svelte'
+	import Header from './Header.svelte';
+	import Home from './Home.svelte';
+	import Npc from './Npc.svelte';
 	import { Router, Route, navigate } from "svelte-routing";
 	import {basepath} from "./routing";
 
@@ -13,6 +14,7 @@
 
 <style type="text/scss" global>
 	@import './colors.scss';
+	@import './breakpoints.scss';
 
 	:global(body) {
 		background-color: $light-background;
@@ -29,8 +31,9 @@
 	}
 
 	main {
-		text-align: center;
 		padding: 1em;
+		margin: 0 auto;
+		max-width: 700px;
 	}
 
 	h1 {
@@ -43,8 +46,12 @@
 <Router basepath={basepath}>
 	<Header />
 	<main>
-		<Route path="/"><Home /></Route>
-		<Route path="other">other</Route>
+		<Route path="/">
+			<Home />
+		</Route>
+		<Route path="npc/:id" let:params>
+			<Npc id={params.id} />
+		</Route>
 	</main>
 </Router>
 
