@@ -1,11 +1,8 @@
-<script>
+<script lang="ts">
 	import Header from './Header.svelte'
 	import Home from './Home.svelte'
 	import { Router, Route, navigate } from "svelte-routing";
-
-	const basepath = location.hostname === 'localhost'
-		? '/'
-		: '/a-mechanical-awakening';
+	import {getBasepath} from "./routing";
 
 	const path = localStorage.getItem('path');
 	if (path) {
@@ -43,7 +40,7 @@
 	}
 </style>
 
-<Router basepath={basepath}>
+<Router basepath={getBasepath()}>
 	<Header />
 	<main>
 		<Route path="/"><Home /></Route>
