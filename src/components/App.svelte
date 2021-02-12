@@ -1,6 +1,6 @@
 <script lang="ts">
 	import Header from './Header.svelte';
-	import Home from './Home.svelte';
+	import Home from './Home/Home.svelte';
 	import Npc from './Npc.svelte';
 	import { Router, Route, navigate } from "svelte-routing";
 	import {basepath} from "../routing";
@@ -27,6 +27,7 @@
 
 		&:hover {
 			text-decoration: none;
+			color: $light-blue
 		}
 	}
 
@@ -39,6 +40,11 @@
 	h1 {
 		text-transform: uppercase;
 		font-size: 3em;
+		font-weight: 100;
+	}
+
+	h2 {
+		text-transform: uppercase;
 		font-weight: 100;
 	}
 </style>
