@@ -1,29 +1,41 @@
 import type Npc from './models/npc';
+import type Location from './models/location';
+import type EntryRef from './models/entryRef';
 import type {ContentfulNpc} from './models/npc';
+import type {ContentfulLocation} from './models/location';
 import {default as axios} from 'axios';
 import { documentToHtmlString } from '@contentful/rich-text-html-renderer';
 import type {SearchResult} from './models/searchResult';
 import {basepath} from './routing';
 
 interface ContentfulResponse<T> {
-    items: ContentfulItem<ContentfulNpc>[]
-    includes: any
+    items: ContentfulItem<T>[]
+    includes: Includes
 }
 
 interface ContentfulItem<T> {
-    fields: T
+    sys: {
+        id: string;
+        contentType: ContentfulItem<any>
+    };
+    fields: T;
 }
+
+interface Includes {
+    Entry: ContentfulItem<any>[];
+    Asset: ContentfulItem<any>[];
+}
+
+type EntryType = 'npc' | 'location';
 
 const cdnUrl = "https://cdn.contentful.com/spaces/6hzlnplv14jn/environments/master"
 
 // this is read-only, no need to keep secure seeing as we're exposing everything publicly anyway
-const accessQuery = "access_token=NREbqEcYgXbVfscMkH1ASy8l5JVlrhpnG_anAUmrHqk"
+const accessToken = "NREbqEcYgXbVfscMkH1ASy8l5JVlrhpnG_anAUmrHqk"
 
 export async function getNpc(id: string): Promise<Npc> {
-    const response = await axios.get(`${cdnUrl}/entries?${accessQuery}&content_type=npc&fields.id=${encodeURI(id)}&limit=1`)
-    const {items, includes}: ContentfulResponse<ContentfulNpc> = response.data;
-    const npcResponse: ContentfulNpc = items[0].fields;
-
+    const {items, includes} = await getContentfulEntry('npc', id);
+    const npcResponse = items[0].fields;
 
     const pictureUrl = await getImageUrl(includes, npcResponse.picture.sys.id);
     const articleHtml = documentToHtmlString(npcResponse.article)
@@ -35,17 +47,52 @@ export async function getNpc(id: string): Promise<Npc> {
     }
 }
 
+export async function getLocation(id: string): Promise<Location> {
+    const {items, includes} = await getContentfulEntry('location', id);
+    const locationResponse = items[0].fields;
+
+    const pictureUrl = await getImageUrl(includes, locationResponse.picture.sys.id);
+    const articleHtml = documentToHtmlString(locationResponse.article)
+    const locatedIn = locationResponse.locatedIn && getIncludedEntryId(includes, locationResponse.locatedIn.sys.id);
+
+    return {
+        ...locationResponse,
+        pictureUrl,
+        articleHtml,
+        locatedIn
+    }
+}
+
+async function getContentfulEntry(type: 'npc', id: string): Promise<ContentfulResponse<ContentfulNpc>>
+async function getContentfulEntry(type: 'location', id: string): Promise<ContentfulResponse<ContentfulLocation>>
+async function getContentfulEntry(type: EntryType, id: string): Promise<ContentfulResponse<unknown>> {
+    const response = await axios.get(`${cdnUrl}/entries`, {
+        params: {
+            "access_token": accessToken,
+            "content_type": type,
+            "fields.id": encodeURI(id),
+            "limit": 1
+        }
+    });
+    return response.data
+}
+
 export async function search(term: string): Promise<SearchResult[]> {
     if (term.length < 3) {
         return []
     }
-    const response = await axios.get(`${cdnUrl}/entries?${accessQuery}&query=${term}&limit=5`);
+    const response = await axios.get(`${cdnUrl}/entries`, {
+        params: {
+            "access_token": accessToken,
+            "query": term,
+            "limit": 5
+        }
+    });
 
-    const {items, includes} = response.data
+    const {items, includes} = response.data;
 
-    // TODO: Get the content type for URL
     return Promise.all(items.map(res => ({
-        pageUrl: `${basepath}/npc/${res.fields.id}`,
+        pageUrl: `${basepath}/${res.sys.contentType.sys.id}/${res.fields.id}`,
         title: res.fields.name,
         subtitle: res.fields.description,
         pictureUrl: getImageUrl(includes, res.fields.picture.sys.id)
@@ -55,4 +102,13 @@ export async function search(term: string): Promise<SearchResult[]> {
 function getImageUrl(includes: any, imageId: string): string {
     const imageAsset = includes.Asset.filter(asset => asset.sys.id === imageId)[0];
     return imageAsset.fields.file.url;
+}
+
+function getIncludedEntryId(includes: Includes, entryId: string): EntryRef {
+    const entry = includes.Entry.filter(entry => entry.sys.id === entryId)[0];
+    return {
+        type: entry.sys.contentType.sys.id,
+        id: entry.fields.id,
+        text: entry.fields.name
+    }
 }

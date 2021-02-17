@@ -2,6 +2,7 @@
 	import Header from './Header.svelte';
 	import Home from './Home/Home.svelte';
 	import Npc from './Npc.svelte';
+	import Location from './Location.svelte';
 	import { Router, Route, navigate } from "svelte-routing";
 	import {basepath} from "../routing";
 
@@ -57,6 +58,9 @@
 		</Route>
 		<Route path="npc/:id" let:params>
 			<Npc id={params.id} />
+		</Route>
+		<Route path="location/:id" let:params>
+			<Location id={params.id} />
 		</Route>
 	</main>
 </Router>
