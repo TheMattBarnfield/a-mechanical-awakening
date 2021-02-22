@@ -37,7 +37,6 @@ const accessToken = "NREbqEcYgXbVfscMkH1ASy8l5JVlrhpnG_anAUmrHqk"
 export async function getNpc(id: string): Promise<Npc> {
     const {items, includes} = await getContentfulEntry('npc', id);
     const npcResponse = items[0].fields;
-
     const pictureUrl = await getImageUrl(includes, npcResponse.picture.sys.id);
     const articleHtml = parseArticleToHtml(includes, npcResponse.article);
 
@@ -75,7 +74,26 @@ async function getContentfulEntry(type: EntryType, id: string): Promise<Contentf
             "limit": 1
         }
     });
-    return response.data
+    return response.data;
+}
+
+export async function getAllNpcs(): Promise<SearchResult[]> {
+    const response = await axios.get(`${cdnUrl}/entries`, {
+        params: {
+            "access_token": accessToken,
+            "content_type": "npc",
+            "order": "fields.name"
+        }
+    });
+
+    const {items, includes} = response.data;
+
+    return Promise.all(items.map(res => ({
+        pageUrl: getEntryUrl(res.sys.contentType.sys.id, res.fields.id),
+        title: res.fields.name,
+        subtitle: res.fields.description,
+        pictureUrl: getImageUrl(includes, res.fields.picture.sys.id)
+    })));
 }
 
 export async function search(term: string): Promise<SearchResult[]> {

@@ -36,7 +36,7 @@
   }
 
   .picture {
-    border: 5px solid $brown;
+    border: 3px solid $brown;
     box-sizing: border-box;
     flex: 0 0 35%;
     min-width: 0;

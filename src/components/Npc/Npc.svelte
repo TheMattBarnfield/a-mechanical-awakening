@@ -1,8 +1,8 @@
 <script lang="ts">
-    import {getNpc} from "../api";
-    import LoadingSpinner from "./LoadingSpinner.svelte";
-    import type Npc from '../models/npc';
-    import ArticleHeader from './Article/ArticleHeader.svelte';
+    import {getNpc} from "../../api";
+    import LoadingSpinner from "../LoadingSpinner.svelte";
+    import type Npc from '../../models/npc';
+    import ArticleHeader from '../Article/ArticleHeader.svelte';
 
     export let params: {id: string};
     let npc: Promise<Npc> = getNpc(params.id);

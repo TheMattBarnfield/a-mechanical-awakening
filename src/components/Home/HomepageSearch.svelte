@@ -1,7 +1,7 @@
 <script lang="ts">
     import {search} from "../../api";
     import LoadingSpinner from "../LoadingSpinner.svelte";
-    import HomepageSearchResult from "./HomepageSearchResult.svelte";
+    import SearchResultItem from "../SearchResultItem.svelte";
     import type {SearchResult} from './models/searchResult';
 
     let term = '';
@@ -40,6 +40,7 @@
     .search-container {
       border: 3px solid $brown;
       padding: 5px;
+      margin-bottom: var(--spacing);
     }
 
     .search-box {
@@ -56,7 +57,7 @@
             <LoadingSpinner />
         {:then searchResults}
             {#each searchResults as result}
-                <HomepageSearchResult result={result} />
+                <SearchResultItem result={result} />
             {/each}
         {/await}
     </div>
