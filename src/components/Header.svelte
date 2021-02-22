@@ -25,6 +25,6 @@
 
 <header>
     <nav>
-        <a class="home-link" href="#">A Mechanical Awakening</a>
+        <a class="home-link" href={`${basepath}/#`}>A Mechanical Awakening</a>
     </nav>
 </header>

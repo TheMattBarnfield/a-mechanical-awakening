@@ -5,7 +5,7 @@ import type {ContentfulNpc} from './models/npc';
 import type {ContentfulLocation} from './models/location';
 import {default as axios} from 'axios';
 import type {SearchResult} from './models/searchResult';
-import {basepath} from './routing';
+import {basepath, getEntryUrl} from './routing';
 import { documentToHtmlString } from '@contentful/rich-text-html-renderer';
 import { INLINES } from '@contentful/rich-text-types';
 
@@ -114,10 +114,6 @@ function parseArticleToHtml(includes: Includes, article: any): string {
             }
         }
     });
-}
-
-function getEntryUrl(type: EntryType, id: string) {
-    return `/#/${type}/${id}`
 }
 
 function getIncludedEntryId(includes: Includes, entryId: string): EntryRef {
