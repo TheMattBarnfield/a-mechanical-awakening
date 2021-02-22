@@ -3,10 +3,9 @@
     import LoadingSpinner from "./LoadingSpinner.svelte";
     import type Location from '../models/location';
     import ArticleHeader from "./Article/ArticleHeader.svelte";
-    import {basepath} from "../routing";
 
-    export let id: string;
-    let location: Promise<Location> = getLocation(id);
+    export let params: {id: string};
+    let location: Promise<Location> = getLocation(params.id);
 </script>
 
 {#await location}
@@ -15,7 +14,7 @@
     <ArticleHeader {...location} />
     {#if location.locatedIn}
     <div>
-      <a href={`${basepath}/${location.locatedIn.type}/${location.locatedIn.id}`}>
+      <a href={`/#/${location.locatedIn.type}/${location.locatedIn.id}`}>
         {location.locatedIn.text}
       </a>
     </div>

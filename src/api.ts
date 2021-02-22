@@ -4,9 +4,10 @@ import type EntryRef from './models/entryRef';
 import type {ContentfulNpc} from './models/npc';
 import type {ContentfulLocation} from './models/location';
 import {default as axios} from 'axios';
-import { documentToHtmlString } from '@contentful/rich-text-html-renderer';
 import type {SearchResult} from './models/searchResult';
 import {basepath} from './routing';
+import { documentToHtmlString } from '@contentful/rich-text-html-renderer';
+import { INLINES } from '@contentful/rich-text-types';
 
 interface ContentfulResponse<T> {
     items: ContentfulItem<T>[]
@@ -38,7 +39,7 @@ export async function getNpc(id: string): Promise<Npc> {
     const npcResponse = items[0].fields;
 
     const pictureUrl = await getImageUrl(includes, npcResponse.picture.sys.id);
-    const articleHtml = documentToHtmlString(npcResponse.article)
+    const articleHtml = parseArticleToHtml(includes, npcResponse.article);
 
     return {
         ...npcResponse,
@@ -52,7 +53,7 @@ export async function getLocation(id: string): Promise<Location> {
     const locationResponse = items[0].fields;
 
     const pictureUrl = await getImageUrl(includes, locationResponse.picture.sys.id);
-    const articleHtml = documentToHtmlString(locationResponse.article)
+    const articleHtml = parseArticleToHtml(includes, locationResponse.article)
     const locatedIn = locationResponse.locatedIn && getIncludedEntryId(includes, locationResponse.locatedIn.sys.id);
 
     return {
@@ -92,16 +93,31 @@ export async function search(term: string): Promise<SearchResult[]> {
     const {items, includes} = response.data;
 
     return Promise.all(items.map(res => ({
-        pageUrl: `${basepath}/${res.sys.contentType.sys.id}/${res.fields.id}`,
+        pageUrl: getEntryUrl(res.sys.contentType.sys.id, res.fields.id),
         title: res.fields.name,
         subtitle: res.fields.description,
         pictureUrl: getImageUrl(includes, res.fields.picture.sys.id)
     })));
 }
 
-function getImageUrl(includes: any, imageId: string): string {
+function getImageUrl(includes: Includes, imageId: string): string {
     const imageAsset = includes.Asset.filter(asset => asset.sys.id === imageId)[0];
     return imageAsset.fields.file.url;
+}
+
+function parseArticleToHtml(includes: Includes, article: any): string {
+    return documentToHtmlString(article, {
+        renderNode: {
+            [INLINES.ENTRY_HYPERLINK]: (node) => {
+                const {type, id} = getIncludedEntryId(includes, node.data.target.sys.id)
+                return `<a href="${getEntryUrl(type, id)}">${node.content[0].value}</a>`
+            }
+        }
+    });
+}
+
+function getEntryUrl(type: EntryType, id: string) {
+    return `/#/${type}/${id}`
 }
 
 function getIncludedEntryId(includes: Includes, entryId: string): EntryRef {

@@ -3,7 +3,7 @@
 	import Home from './Home/Home.svelte';
 	import Npc from './Npc.svelte';
 	import Location from './Location.svelte';
-	import { Router, Route, navigate } from "svelte-routing";
+	import Router from "svelte-spa-router";
 	import {basepath} from "../routing";
 
 	const path = localStorage.getItem('path');
@@ -11,6 +11,12 @@
 		localStorage.removeItem('path');
 		navigate(path);
 	}
+
+	const routes = {
+        '/': Home,
+        '/npc/:id': Npc,
+        '/location/:id': Location
+    }
 </script>
 
 <style type="text/scss" global>
@@ -50,19 +56,9 @@
 	}
 </style>
 
-<Router basepath={basepath}>
-	<Header />
-	<main>
-		<Route path="/">
-			<Home />
-		</Route>
-		<Route path="npc/:id" let:params>
-			<Npc id={params.id} />
-		</Route>
-		<Route path="location/:id" let:params>
-			<Location id={params.id} />
-		</Route>
-	</main>
-</Router>
+<Header />
+<main>
+    <Router {routes} />
+</main>
 
 

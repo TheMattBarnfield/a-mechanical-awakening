@@ -4,8 +4,8 @@
     import type Npc from '../models/npc';
     import ArticleHeader from './Article/ArticleHeader.svelte';
 
-    export let id: string;
-    let npc: Promise<Npc> = getNpc(id);
+    export let params: {id: string};
+    let npc: Promise<Npc> = getNpc(params.id);
 </script>
 
 {#await npc}

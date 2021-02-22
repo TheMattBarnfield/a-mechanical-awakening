@@ -1,5 +1,4 @@
 <script lang="ts">
-    import {link} from 'svelte-routing';
     import type {SearchResult} from '../../models/searchResult';
 
     export let result: SearchResult;
@@ -64,7 +63,7 @@
     }
 </style>
 
-<a href={result.pageUrl} use:link class="search-link">
+<a href={result.pageUrl} class="search-link">
     <div class="search-result">
         <img class="picture" src={result.pictureUrl} alt={result.title} />
         <h2 class="title">{result.title}</h2>

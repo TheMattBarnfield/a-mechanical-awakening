@@ -1,9 +1,11 @@
-<script>
+<script lang="ts">
     import {search} from "../../api";
     import LoadingSpinner from "../LoadingSpinner.svelte";
     import HomepageSearchResult from "./HomepageSearchResult.svelte";
+    import type {SearchResult} from './models/searchResult';
 
     let term = '';
+    let results = Promise.resolve([]);
 
     function handleKeydown({ keyCode }) {
         if (keyCode !== 38 && keyCode !== 40) {
