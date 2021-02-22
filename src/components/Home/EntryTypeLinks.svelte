@@ -1,4 +1,6 @@
 <script lang="ts">
+    import {basepath} from '../../routing.ts';
+
     const types = [{
         name: "NPCs",
         type: "npc",
@@ -71,7 +73,7 @@
     <ul class="entry-type-links">
         {#each types as type}
             <li>
-                <a href={`/#/${type.type}`} class="entry-type-link" style={`background-image:url('${type.image}')`}>
+                <a href={`${basepath}/#/${type.type}`} class="entry-type-link" style={`background-image:url('${type.image}')`}>
                     <div class="entry-type-link-header">
                        {type.name}<span class="arrow">></span>
                     </div>

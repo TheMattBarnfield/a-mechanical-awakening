@@ -7,7 +7,7 @@
 </script>
 
 <style>
-    ul {
+    .npc-list {
         list-style: none;
         padding: 0;
     }
@@ -17,7 +17,7 @@
 {#await npcs}
 <LoadingSpinner />
 {:then npcs}
-<ul>
+<ul class="npc-list">
     {#each npcs as npc}
         <li>
             <SearchResultItem result={npc} />
